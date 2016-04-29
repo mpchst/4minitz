@@ -72,12 +72,12 @@ export class MeetingSeries {
         );
     }
 
-    save () {
+    save (callback) {
         if (this._id && this._id != "") {
             console.log("My Minutes:"+this.minutes);
-            Meteor.call("meetingseries.update", this);
+            Meteor.call("meetingseries.update", this, callback);
         } else {
-            Meteor.call("meetingseries.insert", this);
+            Meteor.call("meetingseries.insert", this, callback);
         }
     }
 
