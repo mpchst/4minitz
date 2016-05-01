@@ -1,0 +1,33 @@
+<template name="meetingSeriesDetails">
+    <h2 class="header center orange-text">
+        Meeting Series Details
+    </h2>
+
+    {{#if errorTitle}}
+        <div class="alert alert-danger" role="alert"><strong>{{errorTitle}}: </strong> {{errorMessage}}</div>
+    {{/if}}
+
+    <ul class="nav nav-tabs">
+        <li data-template="minutesList" role="presentation" class="active"><a href="#">Minutes</a></li>
+        <li data-template="topicListTab" data-action="open" role="presentation"><a href="#">Open Topics</a></li>
+        <li data-template="topicListTab" data-action="closed" role="presentation"><a href="#">Closed Topics</a></li>
+        <li data-template="decisionList" role="presentation"><a href="#">Decisions</a></li>
+    </ul>
+    <div class="active">
+        {{> Template.dynamic template=tab data=tabData}}
+    </div>
+
+    <p></p>
+    <a class="btn btn-primary" href="/">OK</a>
+
+    <br>
+    <br>
+
+    <div class="help panel panel-default">
+        <div class="panel-heading">Quick Help</div>
+        <div class="panel-body">
+            <p>Click on date button to show details for these minutes</p>
+            <a href="#" id="btnHideHelp">OK, Hide</a>
+        </div>
+    </div>
+</template>
