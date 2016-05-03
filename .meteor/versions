@@ -15,7 +15,6 @@ caching-html-compiler@1.0.6
 callback-hook@1.0.8
 check@1.2.1
 coffeescript@1.0.17
-dburles:factory@0.4.2
 dburles:mongo-collection-instances@0.3.5
 ddp@1.2.5
 ddp-client@1.2.7
@@ -105,4 +104,3 @@ useraccounts:bootstrap@1.14.2
 useraccounts:core@1.14.2
 webapp@1.2.8
 webapp-hashing@1.0.9
-xolvio:cleaner@0.3.0

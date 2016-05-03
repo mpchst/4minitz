@@ -77,7 +77,19 @@ export class MeetingSeries {
             console.log("My Minutes:"+this.minutes);
             Meteor.call("meetingseries.update", this, callback);
         } else {
-            Meteor.call("meetingseries.insert", this, callback);
+            let result = Meteor.call(
+                "meetingseries.insert",
+                this,
+                /* client callback to get the new id immediately */
+                (newId) => {
+                    this._id = newId
+                },
+                /* server callback */
+                callback
+            );
+            if (result) {
+                this._id = result;
+            }
         }
     }
 

@@ -25,7 +25,7 @@ if (Meteor.isClient) {
 }
 
 Meteor.methods({
-    'meetingseries.insert'(doc) {
+    'meetingseries.insert'(doc, clientCallback) {
         console.log("meetingseries.insert");
         // check(text, String);
 
@@ -61,8 +61,11 @@ Meteor.methods({
             doc.closedTopics =  [];
         }
 
-        MeetingSeriesCollection.insert(doc, function(error, newMeetingSeriesID) {
+        return MeetingSeriesCollection.insert(doc, function(error, newMeetingSeriesID) {
             doc._id = newMeetingSeriesID;
+            if (Meteor.isClient && clientCallback) {
+                clientCallback(newMeetingSeriesID);
+            }
         });
 
     },
