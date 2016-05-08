@@ -1,34 +1,21 @@
 import { expect } from 'meteor/practicalmeteor:chai';
 import { sinon } from 'meteor/practicalmeteor:sinon';
+import { resetDatabase } from 'meteor/xolvio:cleaner';
 
-import StubCollections from 'meteor/hwillson:stub-collections';
-import { MeetingSeriesCollection } from '/imports/collections/meetingseries_private'
-
-import { MeetingSeries } from '/imports/meetingseries'
-
-Meteor.methods({
-    'removeAll': () => {
-        MeetingSeriesCollection.remove({});
-    }
-});
+import { MeetingSeriesCollection } from '/imports/collections/meetingseries_private';
+import { MeetingSeries } from '/imports/meetingseries';
 
 describe('MeetingSeries', function() {
 
     let testSeriesDoc;
 
-    beforeEach(function () {
+    beforeEach(function (done) {
         testSeriesDoc = {
             project: "TestProject",
             name: "SeriesName"
         };
 
-        // mock our meetingSeriesCollection
-        StubCollections.stub(MeetingSeriesCollection);
-        Meteor.call('removeAll');
-    });
-
-    afterEach(function() {
-        StubCollections.restore();
+        resetDatabase(null, done);
     });
 
     it('Create new meeting series', function () {
@@ -41,10 +28,16 @@ describe('MeetingSeries', function() {
 
         // now we should found our new inserted series in the database
         // and no series else
-        expect(MeetingSeriesCollection.find().count()).to.equal(1);
-        let seriesFromDb = MeetingSeriesCollection.findOne();
+        // this is not correct. server and client tests run parallel
+        // checking simply for the number of documents may fail
+        // expect(MeetingSeriesCollection.find().count()).to.equal(1);
+
+        expect(MeetingSeriesCollection.find(testSeries._id).count()).to.equal(1);
+
+        let seriesFromDb = MeetingSeriesCollection.findOne(testSeries._id);
+        // nonsense now with the latest changes
         // the id should be the same
-        expect(seriesFromDb._id).to.equal(testSeries._id);
+        // expect(seriesFromDb._id).to.equal(testSeries._id);
         // project should be the same
         expect(seriesFromDb.project).to.equal(testSeries.project);
         // name should be the same
