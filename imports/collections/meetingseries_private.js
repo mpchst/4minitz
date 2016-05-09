@@ -28,7 +28,7 @@ if (Meteor.isClient) {
 }
 
 Meteor.methods({
-    'meetingseries.insert'(doc) {
+    'meetingseries.insert'(doc, clientCallback) {
         console.log("meetingseries.insert");
         // check(text, String);
 
@@ -63,6 +63,10 @@ Meteor.methods({
             doc._id = newMeetingSeriesID;
             // Make creator of this meeting series the first moderator
             Roles.addUsersToRoles(Meteor.userId(), [UserRoles.ROLE_MODERATOR], newMeetingSeriesID);
+
+            if (Meteor.isClient && clientCallback) {
+                clientCallback(newMeetingSeriesID);
+            }
         });
     },
 

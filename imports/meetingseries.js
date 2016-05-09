@@ -72,11 +72,23 @@ export class MeetingSeries {
         );
     }
 
-    save () {
+    save (callback) {
         if (this._id && this._id != "") {
-            Meteor.call("meetingseries.update", this);
+            Meteor.call("meetingseries.update", this, callback);
         } else {
-            Meteor.call("meetingseries.insert", this);
+            let result = Meteor.call(
+                "meetingseries.insert",
+                this,
+                /* client callback to get the new id immediately */
+                (newId) => {
+                    this._id = newId
+                },
+                /* server callback */
+                callback
+            );
+            if (result) {
+                this._id = result;
+            }
         }
     }
 
