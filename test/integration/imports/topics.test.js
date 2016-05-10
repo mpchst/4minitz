@@ -3,6 +3,8 @@
  */
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
+import { expect } from 'meteor/practicalmeteor:chai';
+
 import { MeetingSeries } from '/imports/meetingseries'
 import { Minutes } from '/imports/minutes'
 import { Topic } from '/imports/topic'
@@ -14,7 +16,7 @@ Meteor.methods({
     }
 });
 
-describe('Topics', function () {
+describe('Integration-Test for Topics and TopicItems of Minutes', function () {
 
     beforeEach(function(done) {
 
@@ -41,10 +43,10 @@ describe('Topics', function () {
 
     });
 
-    it('add a new topic items to an existing topic', function () {
+    it('add a new topic item to an existing minute', function () {
         if (Meteor.isServer && !(Meteor.call('getUserId'))) {
-            // on the server the test will be called first without an authenticated user
-            // then with the correct user...
+            // on the server the test will be called  without an authenticated user
+            // so the test cannot be executed
             return;
         }
 
@@ -58,15 +60,27 @@ describe('Topics', function () {
         // fetch the meeting series again because the minutes array will not be updated!
         ms = new MeetingSeries(ms._id);
 
-        console.log("access lastmin");
         console.log(ms);
         let minute = ms.lastMinutes();
         console.log("last min:" + minute);
 
-        // At this point a meeting series with one minutes is prepared
+        // At this point a meeting series with one minute is prepared
         // now we can test the topics
         // maybe the initialization above should be already done in the beforeEach-hook ?!
 
+        let myTopic = new Topic(minute._id, {
+            subject: "topic-subject"
+        });
+        console.log(myTopic);
 
+        myTopic.save();
+
+        // fetch the minute again because saving the topic does not update the minutes object
+        minute = new Minutes(minute._id);
+
+        // the minute should contain the topic
+        let checkTopic = minute.findTopic(myTopic._topicDoc._id);
+        console.log(checkTopic);
+        expect(checkTopic.subject).to.equal(myTopic._topicDoc.subject);
     });
 });
