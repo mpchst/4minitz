@@ -37,9 +37,23 @@
         </div>
         <div id="collapse-{{currentCollapseId}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
-                {{#each detailsArray}}
+                <!--{{#each detailsArray}}
                     <p>{{this.date}} - {{this.text}}</p>
-                {{/each}}
+                {{/each}}-->
+
+                <ul class="list-group" data-topicid="{{topic._id}}">
+                    <li class="list-group-item list-group-item-info">
+                        <div class="infoItem-editor editInfoItem"></div>
+                    </li>
+                    {{#each topic.infoItems}}
+                        <li class="list-group-item list-group-item-info">
+                            <div>
+                                <span class="glyphicon glyphicon-info-sign pull-left" style="margin-right: 5px;"></span>
+                                <div class="infoItem-editor editInfoItem addInfoItems">{{this.subject}}</div>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
             </div>
         </div>
     </div>
