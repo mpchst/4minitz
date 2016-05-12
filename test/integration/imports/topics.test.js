@@ -43,44 +43,40 @@ describe('Integration-Test for Topics and TopicItems of Minutes', function () {
 
     });
 
-    it('add a new topic item to an existing minute', function () {
-        if (Meteor.isServer && !(Meteor.call('getUserId'))) {
-            // on the server the test will be called  without an authenticated user
-            // so the test cannot be executed
-            return;
-        }
+    if (Meteor.isClient) { // client-only test!
+        it('add a new topic item to an existing minute', function () {
+            let ms = new MeetingSeries({
+                project: 'foo',
+                name: 'bar'
+            });
+            ms.save();
+            ms.addNewMinutes();
 
-        let ms = new MeetingSeries({
-            project: 'foo',
-            name: 'bar'
+            // fetch the meeting series again because the minutes array will not be updated!
+            ms = new MeetingSeries(ms._id);
+
+            console.log(ms);
+            let minute = ms.lastMinutes();
+            console.log("last min:" + minute);
+
+            // At this point a meeting series with one minute is prepared
+            // now we can test the topics
+            // maybe the initialization above should be already done in the beforeEach-hook ?!
+
+            let myTopic = new Topic(minute._id, {
+                subject: "topic-subject"
+            });
+            console.log(myTopic);
+
+            myTopic.save();
+
+            // fetch the minute again because saving the topic does not update the minutes object
+            minute = new Minutes(minute._id);
+
+            // the minute should contain the topic
+            let checkTopic = minute.findTopic(myTopic._topicDoc._id);
+            console.log(checkTopic);
+            expect(checkTopic.subject).to.equal(myTopic._topicDoc.subject);
         });
-        ms.save();
-        ms.addNewMinutes();
-
-        // fetch the meeting series again because the minutes array will not be updated!
-        ms = new MeetingSeries(ms._id);
-
-        console.log(ms);
-        let minute = ms.lastMinutes();
-        console.log("last min:" + minute);
-
-        // At this point a meeting series with one minute is prepared
-        // now we can test the topics
-        // maybe the initialization above should be already done in the beforeEach-hook ?!
-
-        let myTopic = new Topic(minute._id, {
-            subject: "topic-subject"
-        });
-        console.log(myTopic);
-
-        myTopic.save();
-
-        // fetch the minute again because saving the topic does not update the minutes object
-        minute = new Minutes(minute._id);
-
-        // the minute should contain the topic
-        let checkTopic = minute.findTopic(myTopic._topicDoc._id);
-        console.log(checkTopic);
-        expect(checkTopic.subject).to.equal(myTopic._topicDoc.subject);
-    });
+    }
 });
