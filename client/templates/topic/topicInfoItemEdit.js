@@ -7,6 +7,7 @@ import { ActionItem } from '/imports/actionitem'
 
 Session.setDefault("topicInfoItemEditTopicId", null);
 Session.setDefault("topicInfoItemEditInfoItemId", null);
+Session.setDefault("topicInfoItemType", null);
 
 let _minutesID; // the ID of these minutes
 
@@ -156,6 +157,10 @@ Template.topicInfoItemEdit.events({
             let type = (editItem instanceof ActionItem) ? "actionItem" : "infoItem";
             tmpl.find('#id_type').value = type;
             toggleItemMode(type, tmpl);
+        } else if (Session.get("topicInfoItemType")) {
+            let type = Session.get("topicInfoItemType");
+            tmpl.find('#id_type').value = type;
+            toggleItemMode(type, tmpl);
         }
     },
 
@@ -170,6 +175,7 @@ Template.topicInfoItemEdit.events({
         // reset the session var to indicate that edit mode has been closed
         Session.set("topicInfoItemEditTopicId", null);
         Session.set("topicInfoItemEditInfoItemId", null);
+        Session.set("topicInfoItemType", null);
     }
 
 

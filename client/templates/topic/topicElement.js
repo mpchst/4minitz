@@ -84,10 +84,13 @@ Template.topicElement.events({
         Session.set("topicEditTopicId", this.topic._id);
     },
 
-    'click #addTopicInfoItem'(evt) {
+    'click .addTopicInfoItem'(evt) {
         evt.preventDefault();
         // will be called before the modal dialog is shown
 
         Session.set("topicInfoItemEditTopicId", this.topic._id);
+
+        let type = $(evt.currentTarget).data("type");
+        Session.set("topicInfoItemType", type);
     }
 });
